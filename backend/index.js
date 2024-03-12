@@ -63,9 +63,9 @@ const corsOptions = {
   origin: true
 };
 
-app.get('/',(req,res)=>{
-    res.send('api is working')
-});
+// app.get('/',(req,res)=>{
+//     res.send('api is working')
+// });
 
 //database connection
 mongoose.set('strictQuery', false);
