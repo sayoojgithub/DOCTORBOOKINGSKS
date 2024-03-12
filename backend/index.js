@@ -11,6 +11,9 @@ import bookingRoute from './Routes/Booking.js';
 import ChatRoute from './Routes/Chat.js';
 import MessageRoute from './Routes/Message.js';
 import http from 'http';
+import path from "path"
+const currentWorkingDir = path.resolve();
+const parentDir = path.dirname(currentWorkingDir)
 import { Server } from 'socket.io';
 
 dotenv.config();
@@ -91,6 +94,21 @@ app.use('/api/v1/admin', adminRoute);
 app.use('/api/v1/booking', bookingRoute);  
 app.use('/api/v1/chat', ChatRoute);
 app.use('/api/v1/message', MessageRoute);
+
+const enviornment = "production"
+
+if (enviornment === 'production') { 
+    const __dirname = path.resolve();
+    app.use(express.static(path.join(parentDir, '/frontend/dist')));
+  
+    app.get('*', (req, res) =>
+      res.sendFile(path.resolve(parentDir, 'frontend', 'dist', 'index.html'))
+    );
+  } else {
+    app.get('/', (req, res) => {
+      res.send('API is running....');
+    });
+  }
 
 server.listen(port, () => {
     console.log('server is running on port' + port);
