@@ -59,12 +59,15 @@ const Login = () => {
           role:result.data.role
         },
       });
+      
       console.log(result.data,'login data')
       console.log(result.token,'login token')
       console.log(result.data.role,'login role')
       setLoading(false)
       toast.success(result.message) 
+      
       navigate('/home')
+     
       
 
       

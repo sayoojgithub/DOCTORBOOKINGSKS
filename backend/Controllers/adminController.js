@@ -3,18 +3,35 @@ import User from "../models/UserSchema.js";
 import Doctor from "../models/DoctorSchema.js";
 import Booking from "../models/BookingSchema.js";
 import Service from "../models/ServiceSchema.js";
+import jwt from "jsonwebtoken";
 
+
+
+
+const generateAdminToken = (user) => {
+  return jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET_KEY_ADMIN,
+    {
+      expiresIn: "15d",
+    }
+  );
+};
 export const adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const admin = await Admin.findOne({ email });
+    
 
     if (admin) {
-      // Compare passwords without bcrypt
+      
       if (password === admin.password) {
-        // Passwords match
-        res.status(200).json({ message: "Login successful" });
+        const admin_token = generateAdminToken(admin);
+        res.status(200).json({  status: true,
+          message: "successfully login",
+          token: admin_token,
+          data: admin, });
       } else {
         // Passwords do not match
         res.status(401).json({ message: "Incorrect password" });

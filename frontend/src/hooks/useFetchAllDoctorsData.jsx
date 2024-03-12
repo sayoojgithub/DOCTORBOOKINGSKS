@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useFetchAllDoctorsData = (url) => {
+const useFetchAllDoctorsData = (url,token) => {
   const [doctorData, setDoctorData] = useState([]);
   //console.log(doctorData)
   const [loading, setLoading] = useState(false);
@@ -11,7 +11,11 @@ const useFetchAllDoctorsData = (url) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await fetch(url);
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         console.log(res)
         const result = await res.json();
 

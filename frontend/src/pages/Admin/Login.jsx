@@ -15,7 +15,7 @@ const Login = () => {
 
 
   const navigate=useNavigate()
-  //const{dispatch}=useContext(authContext)
+  const{dispatch}=useContext(authContext)
   
   const handleInputChange=e=>{
     setFormData({...formData,[e.target.name]:e.target.value})
@@ -47,9 +47,18 @@ const Login = () => {
         body:JSON.stringify(formData)
       })
       const result=await res.json()
+      console.log(result)
       if(!res.ok){
         throw new Error(result.message)
       }
+      dispatch({
+        type:'LOGIN_SUCCESS',
+        payload:{
+          user:result.data,
+          token:result.token,
+          role:result.data.role
+        },
+      });
       
       setLoading(false)
       toast.success(result.message) 

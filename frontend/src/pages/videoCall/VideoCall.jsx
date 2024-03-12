@@ -50,6 +50,7 @@ const VideoCall = () => {
 		if (element) {
 			videoCall(element);
 		}
+		
 	}, [element,userId]);
 
 	return (

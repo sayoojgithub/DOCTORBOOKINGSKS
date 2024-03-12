@@ -27,7 +27,7 @@ const Routers = () => {
     <Route path='/' element={<Home/>}></Route>
     <Route path='/home' element={<Home/>}></Route>
     <Route path='/doctors' element={<ProtectedRoute allowedRoles={['patient']}><Doctors/></ProtectedRoute>}></Route>
-    <Route path='/doctorDetails/:doctorId' element={<DoctorDetails/>}></Route>
+    <Route path='/doctorDetails/:doctorId' element={<ProtectedRoute allowedRoles={['patient']}><DoctorDetails/></ProtectedRoute>}></Route>
     <Route path='/login' element={<Login/>}></Route>
     <Route path='/register' element={<Signup/>}></Route>
     <Route path='/forgotPassword/email' element={<Email/>}></Route>
@@ -40,17 +40,17 @@ const Routers = () => {
     <Route path='/RechargeSuccess' element={<SuccessRecharge/>}></Route>
 
     
-    <Route path='/chat' element={<Chat/>}></Route>
-    <Route path='/videocall/:userId' element={<VideoCall/>}></Route>
+    <Route path='/chat' element={<ProtectedRoute allowedRoles={['patient','doctor']}><Chat/></ProtectedRoute>}></Route>
+    <Route path='/videocall/:userId' element={<ProtectedRoute allowedRoles={['patient','doctor']}><VideoCall/></ProtectedRoute>}></Route>
 
 
 
     <Route path='/contact' element={<Contact/>}></Route>
-    <Route path='/services' element={<Services/>}></Route>
+    <Route path='/services' element={<ProtectedRoute allowedRoles={['patient']}><Services/></ProtectedRoute>}></Route>
     <Route path='/users/profile/me' element={<ProtectedRoute allowedRoles={['patient']}><Myaccount/></ProtectedRoute>}></Route>
     <Route path='/doctors/profile/me' element={<ProtectedRoute allowedRoles={['doctor']}><Dashboard/></ProtectedRoute>}></Route>
     <Route path='/admin/login' element={<AdminLogin/>}></Route>
-    <Route path='/admin/dashboard' element={<AdminDashboard/>}></Route>
+    <Route path='/admin/dashboard' element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard/></ProtectedRoute>}></Route>
 
 
     

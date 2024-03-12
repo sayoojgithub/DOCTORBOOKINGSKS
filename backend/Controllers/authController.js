@@ -41,6 +41,7 @@ export const fpOtp = async (req, res) => {
 
     if (user || doctor) {
       const otp = generateOTP();
+      console.log(otp)
 
       sendOTPEmail(email, otp);
       res.status(200).json({ data: otp });
@@ -175,7 +176,10 @@ export const changepassword = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await Doctor.findOne({ email });
+    }
 
     if (!user) {
       return res.status(404).json({ message: "Check the email and password" });

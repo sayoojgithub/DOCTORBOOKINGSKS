@@ -3,6 +3,7 @@ import { BASE_URL,token } from '../../config';
 import { useNavigate } from "react-router-dom";
 
 const SidePanel = ({ doctorDetails, userDetails }) => {
+  console.log(doctorDetails)
   console.log(userDetails)
   const navigate = useNavigate()
   
@@ -167,7 +168,7 @@ const SidePanel = ({ doctorDetails, userDetails }) => {
       console.error("Error:", error);
     }
   };
-  const isWalletButtonDisabled = totalWalletAmount == null && totalWalletAmount < doctorDetails.fee;
+  const isWalletButtonDisabled = totalWalletAmount == null || totalWalletAmount < doctorDetails.fee;
 
 
   return (

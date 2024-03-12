@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BASE_URL } from "../../config";
+import { BASE_URL,token } from "../../config";
 import { toast } from "react-toastify";
 
 // Confirmation Modal Component
@@ -53,7 +53,11 @@ const ServiceManagement = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/admin/getServices`);
+        const response = await fetch(`${BASE_URL}/admin/getServices`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch services");
         }
@@ -73,6 +77,7 @@ const ServiceManagement = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           serviceName: newServiceName,
@@ -106,6 +111,7 @@ const ServiceManagement = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ isListed: !services.find(service => service._id === selectedServiceId).isListed }),
       });

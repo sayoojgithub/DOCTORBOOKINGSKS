@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useFetchAllBookingData = (url) => {
+const useFetchAllBookingData = (url,token) => {
   const [bookingData, setBookingData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,7 +11,11 @@ const useFetchAllBookingData = (url) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await fetch(url);
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         const result = await res.json();
 
         if (!res.ok) {

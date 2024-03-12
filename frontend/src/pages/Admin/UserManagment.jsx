@@ -1,19 +1,61 @@
 import React, { useState } from 'react';
-import { BASE_URL } from '../../config';
+import { BASE_URL, token } from '../../config';
 import usehandleBlock from '../../hooks/usehandleBlock';
+
+const ConfirmationPopup = ({ isOpen, onCancel, onConfirm }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-gray-800 p-5 rounded-md shadow-md">
+        <p className='text-white'>Are you sure you want to proceed?</p>
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-red-500 text-white rounded-md mr-2"
+          >
+            Confirm
+          </button>
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 bg-gray-500 text-white rounded-md ml-2"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const UserManagement = ({ users, userRefetch }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(10);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   const handleBlock = async (userId) => {
-    console.log('handleBlock');
-    //const res =await fetch(`${BASE_URL}/admin/handleblock/${userId}`)
-    const res = await fetch(`${BASE_URL}/admin/handleblock/${userId}`, {
+    setSelectedUserId(userId);
+    setShowConfirmation(true);
+  };
+
+  const confirmBlock = async () => {
+    // Block user logic here
+    // Assuming you have the logic to handle blocking in this function
+    //const res =await fetch(`${BASE_URL}/admin/handleblock/${selectedUserId}`)
+    const res = await fetch(`${BASE_URL}/admin/handleblock/${selectedUserId}`, {
       method: 'put',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
 
     userRefetch();
+    setShowConfirmation(false);
+  };
+
+  const cancelBlock = () => {
+    setShowConfirmation(false);
   };
 
   const indexOfLastUser = currentPage * usersPerPage;
@@ -22,7 +64,6 @@ const UserManagement = ({ users, userRefetch }) => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  console.log(users);
   return (
     <div className='flex flex-col items-center'>
       {/* Navbar Component */}
@@ -118,6 +159,13 @@ const UserManagement = ({ users, userRefetch }) => {
           </section>
         </div>
       </div>
+
+      {/* Confirmation Popup */}
+      <ConfirmationPopup
+        isOpen={showConfirmation}
+        onConfirm={confirmBlock}
+        onCancel={cancelBlock}
+      />
     </div>
   );
 };

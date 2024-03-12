@@ -1,25 +1,40 @@
 import React, { useState } from 'react';
-import { BASE_URL } from '../../config';
+import { BASE_URL, token } from '../../config';
 
 const DoctorManagement = ({ doctors, doctorRefetch }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [doctorsPerPage] = useState(10);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [selectedDoctorId, setSelectedDoctorId] = useState(null);
 
   const handleBlock = async (doctorId) => {
-    console.log('handleBlock', doctorId);
-
-    const res = await fetch(`${BASE_URL}/admin/handleblockDoctor/${doctorId}`, {
-      method: 'put',
-    });
-
-    doctorRefetch();
+    setSelectedDoctorId(doctorId);
+    setShowConfirmation(true);
   };
 
   const handleApproval = async (doctorId) => {
     const res = await fetch(`${BASE_URL}/admin/handleApproval/${doctorId}`, {
       method: 'put',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
     doctorRefetch();
+  };
+
+  const confirmBlock = async () => {
+    const res = await fetch(`${BASE_URL}/admin/handleblockDoctor/${selectedDoctorId}`, {
+      method: 'put',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    doctorRefetch();
+    setShowConfirmation(false);
+  };
+
+  const cancelBlock = () => {
+    setShowConfirmation(false);
   };
 
   const indexOfLastDoctor = currentPage * doctorsPerPage;
@@ -155,6 +170,29 @@ const DoctorManagement = ({ doctors, doctorRefetch }) => {
           </section>
         </div>
       </div>
+
+      {/* Confirmation Popup */}
+      {showConfirmation && (
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-gray-800 p-5 rounded-md shadow-md">
+            <p className='text-white'>Are you sure you want to proceed?</p>
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={confirmBlock}
+                className="px-4 py-2 bg-red-500 text-white rounded-md mr-2"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={cancelBlock}
+                className="px-4 py-2 bg-gray-500 text-white rounded-md ml-2"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
