@@ -50,7 +50,7 @@ const Chat = () => {
   }, [userInfo, doctorInfo]);
 
   useEffect(() => {
-    socket.current = io("ws://localhost:5000");
+    socket.current = io("wss://medicare.sayoojks.shop");
 
     const userId = userInfo?._id || doctorInfo?._id;
 

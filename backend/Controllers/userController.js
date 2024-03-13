@@ -241,8 +241,8 @@ export const payment = async (req, res) => {
         allowed_countries: ["US"], // Add other countries as needed
       },
       mode: "payment",
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http://localhost:5173/cancel",
+      success_url: "https://medicare.sayoojks.shop/success",
+      cancel_url: "https://medicare.sayoojks.shop/cancel",
     });
 
     // Send the session ID back to the client
@@ -297,8 +297,8 @@ export const recharge = async (req, res) => {
         allowed_countries: ["US"], // Add other countries as needed
       },
       mode: "payment",
-      success_url: "http://localhost:5173/RechargeSuccess",
-      cancel_url: "http://localhost:5173/cancel",
+      success_url: "https://medicare.sayoojks.shop/RechargeSuccess",
+      cancel_url: "https://medicare.sayoojks.shop/cancel",
     });
 
     // Send the session ID back to the client

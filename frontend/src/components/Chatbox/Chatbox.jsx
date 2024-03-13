@@ -12,7 +12,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
   const [user,setUser] = useState('')
 
 
-  const socket = io('http://localhost:5000')
+  const socket = io('https://medicare.sayoojks.shop')
   
 
   const handleChange = (event) => {
