@@ -17,6 +17,7 @@ import VideoCall from '../pages/videoCall/VideoCall'
 import Dashboard from '../Dashboard/doctor-account/Dashboard'
 import AdminLogin from '../pages/Admin/Login'
 import AdminDashboard from '../pages/Admin/Dashboard'
+import NotFoundPage from '../pages/NotFoundPage'
 
 import {Routes,Route} from 'react-router-dom'
 import ProtectedRoute from './ProtectedRoute'
@@ -51,6 +52,7 @@ const Routers = () => {
     <Route path='/doctors/profile/me' element={<ProtectedRoute allowedRoles={['doctor']}><Dashboard/></ProtectedRoute>}></Route>
     <Route path='/admin/login' element={<AdminLogin/>}></Route>
     <Route path='/admin/dashboard' element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard/></ProtectedRoute>}></Route>
+    <Route path="*" element={<NotFoundPage/>}></Route>
 
 
     

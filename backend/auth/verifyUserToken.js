@@ -4,6 +4,7 @@ import User from "../models/UserSchema.js";
 
 export const UserAuthenticate = async (req, res, next) => {
   // get token from headers
+  
   const authToken = req.headers.authorization;
 
   // check if token exists
@@ -12,6 +13,7 @@ export const UserAuthenticate = async (req, res, next) => {
       .status(401)
       .json({ success: false, message: "No token, authorization denied" });
   }
+  
 
   try {
     const token = authToken.split(" ")[1];
@@ -24,7 +26,7 @@ export const UserAuthenticate = async (req, res, next) => {
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({ message: "Token is Expired" });
     }
-    console.log(error.message);
+    console.log(error,'erroorrrr');
     return res
       .status(401)
       .json({ success: false, message: "Invalid tokennnn" });

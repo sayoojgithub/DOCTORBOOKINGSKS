@@ -108,6 +108,7 @@ export const register = async (req, res) => {
 };
 export const login = async (req, res) => {
   const { email, password } = req.body;
+  console.log('haiiiiii')
   try {
     let user = null;
     const patient = await User.findOne({ email });
