@@ -71,3 +71,27 @@ export const findUser = async (req, res) => {
     return res.status(500).json({ message: "An error occurred" });
   }
 };
+export const updateLastSeen = async (req,res)=>{
+  const { userId, lastSeenTime } = req.body
+  console.log('userId:',userId,lastSeenTime)
+  try { 
+    
+    const user = await User.findById(userId)
+    const doctor = await Doctor.findById(userId)
+    if(user){
+      await User.findByIdAndUpdate(userId,{$set:{lastSeen:lastSeenTime}},{new:true})
+    }
+    if(Doctor){
+      await Doctor.findByIdAndUpdate(userId,{$set:{lastSeen:lastSeenTime}},{new:true})
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "last seen updated",
+      
+    });
+
+  } catch (error) {
+    return res.status(500).json({ message: "last seen updation failed" });
+  }
+}

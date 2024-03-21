@@ -1,3 +1,4 @@
+import ChatModel from "../models/ChatModel.js";
 import MessageModel from "../models/MessageModel.js";
 
 export const addMessage = async (req, res) => {
@@ -7,6 +8,11 @@ export const addMessage = async (req, res) => {
     senderId,
     text,
   });
+  await ChatModel.findByIdAndUpdate(
+    chatId,
+    { $inc:{messageCount:1}},
+    {new:true}
+  );
   try {
     const result = await message.save();
     res.status(200).json(result);

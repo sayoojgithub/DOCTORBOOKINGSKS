@@ -6,7 +6,7 @@ import {verifyUserBlocked} from '../auth/verifyUserBlocked.js'
 
 
 const router=express.Router()
-router.get('/current/:email',UserAuthenticate,restrict(['patient']),getSingleUser)
+router.get('/current/:userId',UserAuthenticate,restrict(['patient']),getSingleUser)
 router.get('/',UserAuthenticate,restrict(['admin']),getAllUser)
 router.get('/IndividualPage/:doctorId',UserAuthenticate,restrict(['admin','patient']),getDoctorDetails)
 

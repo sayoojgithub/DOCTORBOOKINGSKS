@@ -64,6 +64,8 @@ const DoctorSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  lastSeen:{type:Date,required:false}
+
   
 });
 

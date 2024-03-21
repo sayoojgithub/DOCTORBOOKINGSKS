@@ -8,10 +8,12 @@ const BookingSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   slot: { type: String, required: true },
   fee: { type: Number, required: true },
-  bookedFor: { type: String, required: true }, // Add "booked for" field
-  paymentStatus: { type: Boolean, default: false }, // Add "payment status" field with default false
-  cancelStatus: { type: Boolean, default: false }, // Add "cancel status" field with default false
+  bookedFor: { type: String, required: true },
+  paymentStatus: { type: Boolean, default: false }, 
+  cancelStatus: { type: Boolean, default: false }, 
   cancelledBy: { type: String, enum: ['doctor', 'patient', null], default: null }, 
+  rescheduleStatus: { type: Boolean, default: false }, 
+  rescheduleSlot: { type: String },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date },
 });

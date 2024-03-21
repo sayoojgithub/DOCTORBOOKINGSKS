@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { BASE_URL } from "../../config";
+import { io } from "socket.io-client";
+import { format } from "timeago.js";
+const socket=io("https://medicare.sayoojks.shop")
 
 
 const Conversation = ({ data, currentUser, online }) => {
   const [userData, setUserData] = useState(null);
-  console.log(data)
+  const [userLastSeen,setUserLastSeen]=useState();
+  const [doctorLastSeen,setDoctorLastSeen]=useState()
+  
+  console.log(userData,'userDataaaa')
 
   useEffect(() => {
     const getUserData = async () => {
@@ -29,6 +35,12 @@ const Conversation = ({ data, currentUser, online }) => {
         console.log(userData);
 
         setUserData(userData);
+        if(userData.userDetails){
+          setUserLastSeen(userData.userDetails.lastSeen)
+        }
+        if(userData.doctorDetails){
+          setDoctorLastSeen(userData.doctorDetails.lastSeen)
+        }
        
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -37,6 +49,23 @@ const Conversation = ({ data, currentUser, online }) => {
   
     getUserData();
   }, [data.members, currentUser]);
+  useEffect(() => {
+    const handleSentLastSeen = ({ lastSeen, userid }) => {
+      if (userData.userDetails && userData.userDetails._id === userid) {
+        setUserLastSeen(lastSeen);
+      }
+      if (userData.doctorDetails && userData.doctorDetails._id === userid) {
+        setDoctorLastSeen(lastSeen);
+      }
+    };
+  
+    socket.on("sentLastSeen", handleSentLastSeen);
+  
+    return () => {
+      socket.off("sentLastSeen", handleSentLastSeen);
+    };
+  }, [socket, userData]);
+  
   
 
 
@@ -61,9 +90,27 @@ const Conversation = ({ data, currentUser, online }) => {
               userData?.userDetails?.name}
           </span>
           <br />
-          <span className={online ? "text-green-500" : "text-gray-500"}>
-            {online ? "Online" : "Offline"}
-          </span>
+          {userData ? userData.doctorDetails ? (
+  <span className={online ? "text-green-500" : "text-gray-500"}>
+    {online
+      ? "Online"
+      : userData.doctorDetails.lastSeen
+      ? `${format(doctorLastSeen)} `
+      : "Offline"}
+  </span>
+) : (
+  <span className={online ? "text-green-500" : "text-gray-500"}>
+    {online
+      ? "Online"
+      : userData.userDetails.lastSeen
+      ? `${format(userLastSeen)} `
+      : "Offline"}
+  </span>
+): (
+  <span className={online ? "text-green-500" : "text-gray-500"}>
+    {online ? "Online" : "Offline"}
+  </span>
+)}
         </div>
       </div>
       <hr className="w-5/6 md:w-11/12 mx-auto border-t border-gray-300 my-4" />

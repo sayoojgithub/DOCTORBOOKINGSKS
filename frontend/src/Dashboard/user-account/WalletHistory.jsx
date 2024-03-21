@@ -281,6 +281,11 @@ const styles = {
     marginBottom: '20px',
     transition: 'background-color 0.3s ease',
   },
+  td: {
+    padding: "12px",
+    borderBottom: "1px solid #ddd",
+    whiteSpace: "nowrap", // Add this property
+  },
 };
 
 export default WalletHistory;

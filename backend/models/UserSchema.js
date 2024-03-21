@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
   bloodType:{type:String},
   isBlocked:{type:Boolean,default:false},
   friends: [friendSchema],
+  lastSeen:{type:Date,required:false}
 
 });
 

@@ -24,9 +24,11 @@ const DoctorDetails = () => {
         if (userString) {
           const userObject = JSON.parse(userString);
           const userEmail = userObject.email;
+          const userId=userObject._id
+          console.log(userId)
 
           const currentUserRes = await fetch(
-            `${BASE_URL}/users/current/${userEmail}`,
+            `${BASE_URL}/users/current/${userId}`,
             {
               method: "GET",
               headers: {

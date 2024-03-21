@@ -17,10 +17,10 @@ const navLinks = [
     path: '/services',
     display: 'Services',
   },
-  {
-    path: '/contact',
-    display: 'Contact',
-  },
+  // {
+  //   path: '/contact',
+  //   display: 'Contact',
+  // },
 ];
 
 const Header = () => {

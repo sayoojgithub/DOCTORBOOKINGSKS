@@ -14,6 +14,7 @@ const Chat = () => {
   const [sendMessage, setSendMessage] = useState(null);
   const [receivedMessage, setReceivedMessage] = useState(null);
   const socket = useRef();
+  const socketEmit=io("https://medicare.sayoojks.shop")
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -65,6 +66,22 @@ const Chat = () => {
     socket.current.on("receive-message", (data) => {
       setReceivedMessage(data);
     });
+    socket.current.on('disconnect',()=>{
+      const lastSeenTime = new Date()
+      socketEmit.emit('lastSeen',lastSeenTime,userId)
+
+      console.log('userId:',userId,lastSeenTime)
+      const updateLastSeen = async()=>{
+         await fetch(`${BASE_URL}/chat/updateLastSeen`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userId,lastSeenTime }) 
+        });
+      }
+      updateLastSeen()
+    })
 
     return () => {
       socket.current.disconnect();

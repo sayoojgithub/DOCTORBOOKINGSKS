@@ -1,10 +1,14 @@
 import mongoose from 'mongoose';
 
-const ChatSchema = mongoose.Schema(
+const ChatSchema = new mongoose.Schema(
     {
         members: {
             type: Array,
         },
+        messageCount:{
+            type:Number,
+            default:0
+        }
     },
     {
         timestamps: true,

@@ -52,11 +52,11 @@ export const updateUser = async (req, res) => {
 };
 
 export const getSingleUser = async (req, res) => {
-  const email = req.params.email;
+  const userId = req.params.userId;
 
   try {
     // Use findOne to find a user by email
-    const user = await User.findOne({ email }).select("-password");
+    const user = await User.findById(userId).select("-password");
 
     if (user) {
       res
@@ -123,36 +123,32 @@ export const getDoctorDetails = async (req, res) => {
         .json({ success: false, message: "Doctor not found", data: null });
     }
 
-    // Fetch booked slots for the selected doctor
-    const bookedSlots = await Booking.find({ doctorId });
+    // Fetch booked slots and rescheduled slots for the selected doctor
+    const bookings = await Booking.find({ doctorId });
+
+    // Combine booked and rescheduled slots
+    const allSlots = bookings.map((booking) => ({
+      date: booking.date,
+      slot: booking.slot,
+    }));
 
     // Remove booked slots from selectedDatesAndSlots
-    bookedSlots.forEach((booking) => {
-      const { date, slot } = booking;
+    allSlots.forEach(({ date, slot }) => {
       const dateSlotIndex = doctorDetails.selectedDatesAndSlots.findIndex(
         (ds) => ds.date.toString() === date.toString()
       );
       if (dateSlotIndex !== -1) {
-        const slotIndex =
-          doctorDetails.selectedDatesAndSlots[dateSlotIndex].slots.indexOf(
-            slot
-          );
+        const slotIndex = doctorDetails.selectedDatesAndSlots[dateSlotIndex].slots.indexOf(slot);
         if (slotIndex !== -1) {
-          doctorDetails.selectedDatesAndSlots[dateSlotIndex].slots.splice(
-            slotIndex,
-            1
-          );
+          doctorDetails.selectedDatesAndSlots[dateSlotIndex].slots.splice(slotIndex, 1);
         }
       }
     });
 
-    // Combine doctor details and booked slots
+    // Combine doctor details, booked slots, and rescheduled slots
     const doctorData = {
       ...doctorDetails._doc,
-      bookedSlots: bookedSlots.map((booking) => ({
-        date: booking.date,
-        slot: booking.slot,
-      })),
+      bookedSlots: allSlots,
     };
 
     // Save the updated doctorDetails
@@ -170,6 +166,7 @@ export const getDoctorDetails = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
 
 export const addFriend = async (req, res) => {
   try {

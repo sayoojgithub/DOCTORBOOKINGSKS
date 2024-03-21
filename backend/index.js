@@ -54,6 +54,13 @@ io.on("connection", (socket) => {
   socket.on('typing',(id)=>{
     io.emit('typingSend',{id})
   })
+  socket.on('lastSeen',(lastSeen,userid)=>{
+    
+    socket.join(userid)
+
+      io.emit("sentLastSeen", {lastSeen,userid});
+  
+  })
 });
 
 

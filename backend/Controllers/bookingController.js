@@ -250,3 +250,94 @@ export const createWallet = async (req, res) => {
     res.status(500).json({ error: "Recharge Failed" });
   }
 };
+export const rescheduleBooking = async (req, res) => {
+  const { bookingId } = req.params;
+
+  try {
+    // Find the booking using the booking ID
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    // Find the doctor associated with the booking
+    const doctor = await Doctor.findById(booking.doctorId);
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Extract the booking date and rescheduled slot
+    const bookingDate = new Date(booking.date);
+    const rescheduledSlot = booking.rescheduleSlot;
+
+    // Find all bookings for the doctor on the same date
+    const doctorBookings = await Booking.find({
+      doctorId: doctor._id,
+      date: { $eq: bookingDate }
+    });
+
+    // Collect all booked slots and rescheduled slots
+    const bookedSlots = [];
+    const rescheduledSlots = [];
+    doctorBookings.forEach(booking => {
+      bookedSlots.push(booking.slot);
+      if (booking.rescheduleStatus && booking.rescheduleSlot) {
+        rescheduledSlots.push(booking.rescheduleSlot);
+      }
+    });
+
+    // Get doctor's configured slots for the date of the booking
+    const selectedDateAndSlots = doctor.selectedDatesAndSlots.find(selectedDate => {
+      const selectedSlotDate = new Date(selectedDate.date);
+      return selectedSlotDate.toDateString() === bookingDate.toDateString();
+    });
+
+    if (!selectedDateAndSlots) {
+      return res.status(404).json({ message: "No available slots for the booking date" });
+    }
+
+    // Filter out the slots that are not booked and not equal to the rescheduled slot
+    let slotsNotBooked = selectedDateAndSlots.slots.filter(slot => !bookedSlots.includes(slot) && !rescheduledSlots.includes(slot));
+
+    res.status(200).json({ slotsNotBooked });
+  } catch (error) {
+    console.error("Error rescheduling booking:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+
+
+export const updateBookingReschedule = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const { rescheduledSlot } = req.body;
+
+    // Find the booking by ID
+    const booking = await Booking.findById(bookingId);
+
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    // Update booking details
+    booking.rescheduleStatus = true;
+    booking.rescheduleSlot = rescheduledSlot;
+    booking.updatedAt = new Date(); // Update updatedAt timestamp
+
+    // Save the updated booking
+    await booking.save();
+
+    // Send success response
+    res.status(200).json({ message: 'Booking rescheduled successfully', booking });
+  } catch (error) {
+    console.error('Error rescheduling booking:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+

@@ -107,8 +107,9 @@ export const register = async (req, res) => {
   }
 };
 export const login = async (req, res) => {
+  console.log('haiiii')
   const { email, password } = req.body;
-  console.log('haiiiiii')
+
   try {
     let user = null;
     const patient = await User.findOne({ email });
@@ -124,6 +125,7 @@ export const login = async (req, res) => {
             .status(403)
             .json({ status: false, message: "User is blocked by admin" });
         }
+    
         const patient_token = generatePatientToken(user);
         res
           .status(200)

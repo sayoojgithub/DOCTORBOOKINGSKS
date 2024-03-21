@@ -50,6 +50,10 @@ const SidePanel = ({ doctorDetails, userDetails }) => {
     );
     return selectedDateSlot && selectedDateSlot.slots.includes(slot);
   };
+  
+  
+  
+  
 
   const handleSlotSelect = (date, slot) => {
     setSelectedDate(date);
