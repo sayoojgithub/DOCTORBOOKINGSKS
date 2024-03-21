@@ -56,7 +56,7 @@ const DoctorManagement = ({ doctors, doctorRefetch }) => {
       {/* Navbar Component */}
       {/* Assuming there's a component named Navbar */}
 
-      <div className='grid grid-cols-1 h-screen bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600 md:grid-cols-4 gap-4 w-full pt-3'>
+      <div className='grid grid-cols-1 h-screen-full bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600 md:grid-cols-4 gap-4 w-full pt-3'>
         {/* Left side (1/3 width) */}
         <div className='col-span-1 flex flex-col justify-start bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600 p-6 rounded-md shadow-md '>
           <button className='w-full text-left font-bold py-3 px-14 bg-transparent text-black rounded-md mb-2 hover:bg-slate-500 focus:outline-none focus:ring focus:border-blue-700 transition duration-300 ease-in-out'>
